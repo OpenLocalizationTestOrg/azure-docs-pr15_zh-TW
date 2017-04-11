@@ -1,0 +1,1 @@
+> [AZURE.NOTE] 本文適用於邏輯應用程式結構描述版本 2014年 12-01-預覽。 我們難以辨識公司會輕鬆地整合邏輯應用程式結構描述版本 2015年-08-01-預覽與此連接器的下一個版本。 同時，[下列方法，您可以使用此版邏輯應用程式 2015年-08-01-預覽結構描述的連接器](https://blogs.msdn.microsoft.com/logicapps/2016/02/25/accessing-v1-apis-and-biztalk-apis-from-logic-apps/)。 

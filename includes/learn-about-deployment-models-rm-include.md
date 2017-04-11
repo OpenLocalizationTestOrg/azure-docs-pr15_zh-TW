@@ -1,0 +1,1 @@
+> [AZURE.NOTE] Azure 有兩種不同的部署模型建立及使用的資源︰[資源管理員] 及 [傳統](../articles/resource-manager-deployment-model.md)。  本文涵蓋使用資源管理員部署模型，而不是最新的部署建議 Microsoft

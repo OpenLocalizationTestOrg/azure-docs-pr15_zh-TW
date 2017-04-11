@@ -1,0 +1,1 @@
+當您使用 Microsoft Azure 流量管理員負載平衡流量 Azure 網站時，然後使用可存取該網站**\*。 trafficmanager.net** Azure 所指派的網域名稱。 您也可以關聯的自訂網域名稱，例如 www.contoso.com，使用您的網站，以提供更容易辨識的網域名稱，為您的使用者。

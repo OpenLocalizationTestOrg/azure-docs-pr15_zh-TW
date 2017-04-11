@@ -1,0 +1,1 @@
+當您建立 web 應用程式時，Microsoft Azure 提供好記的子網域 azurewebsites.net 網域，您的使用者能存取您的 web 應用程式使用的 URL，例如 http://&lt;mywebapp&gt;。 azurewebsites.net。 您也可以關聯的自訂網域名稱，例如 contoso.com，與您的 web 應用程式，以提供更容易辨識的網域名稱，為您的使用者。
