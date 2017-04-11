@@ -1,0 +1,1 @@
+您也可連線 VNets 不使用 VPN 閘道器。 如果您 VNets 是在同一個區域中，您可能要考慮使用 VNet 對等來連接圖形。 如需詳細資訊，請參閱[VNet 對等](../articles/virtual-network/virtual-network-peering-overview.md)文章。

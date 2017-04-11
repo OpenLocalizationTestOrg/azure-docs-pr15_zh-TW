@@ -1,0 +1,1 @@
+> [AZURE.IMPORTANT] 此功能可與**從 Verizon Azure CDN**產品 （標準和進階版）。 它不支援**從 Akamai Azure cdn 到底**。  Cdn 到底功能的比較，請參閱[Azure CDN 概觀](cdn-overview.md#azure-cdn-features)。 

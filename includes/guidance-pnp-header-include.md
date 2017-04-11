@@ -1,0 +1,1 @@
+[![模式和實務](media/guidance-pnp-include/pnp-logo.png)](http://aka.ms/mspnp)

@@ -1,0 +1,1 @@
+如果本文並未解決您 Azure 的問題，請造訪 Azure 論壇，在[MSDN 和堆疊溢位](https://azure.microsoft.com/support/forums/)。 您可以將您的問題張貼在這些論壇，或者[@AzureSupportTwitter 上](https://twitter.com/AzureSupport)。 此外，您可以選取[Azure 支援](https://azure.microsoft.com/support/options/)網站上的 [**取得支援**的檔案 Azure 支援要求。

@@ -1,0 +1,1 @@
+> [AZURE.IMPORTANT] 您使用 Azure 資源之前，熟悉的部署模型︰[資源管理員及傳統](../articles/resource-manager-deployment-model.md)。

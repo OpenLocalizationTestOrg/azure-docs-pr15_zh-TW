@@ -1,0 +1,87 @@
+<properties 
+    pageTitle="轉接例外 |Microsoft Azure"
+    description="轉送例外狀況和建議的動作清單。"
+    services="service-bus"
+    documentationCenter="na"
+    authors="jtaubensee"
+    manager="timlt"
+    editor="tysonn" />
+<tags 
+    ms.service="service-bus"
+    ms.devlang="na"
+    ms.topic="article"
+    ms.tgt_pltfrm="na"
+    ms.workload="na"
+    ms.date="10/28/2016"
+    ms.author="jotaub" />
+
+# <a name="relay-exceptions"></a>轉送例外狀況
+
+本文將列出 Microsoft Azure 轉送 Api 所產生的例外狀況。 此參照會有所變更，因此檢查更新。
+
+## <a name="exception-categories"></a>例外狀況類別
+
+轉送 Api 產生的例外狀況，可以分成下列類別，以及相關聯，嘗試修正問題，您可以採取的動作。
+
+1.  編碼錯誤 ([System.ArgumentException](https://msdn.microsoft.com/library/system.argumentexception.aspx)， [System.InvalidOperationException](https://msdn.microsoft.com/library/system.invalidoperationexception.aspx)， [System.OperationCanceledException](https://msdn.microsoft.com/library/system.operationcanceledexception.aspx)， [System.Runtime.Serialization.SerializationException](https://msdn.microsoft.com/library/system.runtime.serialization.serializationexception.aspx)) 的使用者。 一般動作︰ 嘗試修正之前的程式碼。
+
+2.  設定/設定錯誤 （[Microsoft.ServiceBus.Messaging.MessagingEntityNotFoundException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.messagingentitynotfoundexception.aspx)、 [System.UnauthorizedAccessException](https://msdn.microsoft.com/library/system.unauthorizedaccessexception.aspx)。 一般動作︰ 檢閱您的設定，並視需要變更。
+
+3.  暫時性的例外狀況 ([Microsoft.ServiceBus.Messaging.MessagingException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.messagingexception.aspx)， [Microsoft.ServiceBus.Messaging.ServerBusyException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.serverbusyexception.aspx)， [Microsoft.ServiceBus.Messaging.MessagingCommunicationException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.messagingcommunicationexception.aspx))。 一般動作︰ 試一次或通知使用者。
+
+4.  其他的例外狀況 （[System.Transactions.TransactionException](https://msdn.microsoft.com/library/system.transactions.transactionexception.aspx) [System.TimeoutException](https://msdn.microsoft.com/library/system.timeoutexception.aspx)、 [Microsoft.ServiceBus.Messaging.MessageLockLostException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.messagelocklostexception.aspx)、 [Microsoft.ServiceBus.Messaging.SessionLockLostException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.sessionlocklostexception.aspx)）。 一般動作︰ 特定的例外狀況類型;請參閱下一節中的資料表。 
+
+## <a name="exception-types"></a>例外狀況類型
+
+下表列出訊息的例外狀況類型，其原因和備忘稿建議您可以採取的動作。
+
+| **例外狀況類型**                                                                                                                                                                                                                                                                                | **描述/原因/範例**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | **建議的動作**                                                                                                                                                                                                                                                                                                                                                                                                          | **自動/立即重試的注意事項**                                                                                             |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| [「 逾時](https://msdn.microsoft.com/library/system.timeoutexception.aspx)                                                                                                                                                                                                           | 伺服器未回應指定由[OperationTimeout](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.messagingfactorysettings.operationtimeout.aspx)所控制的時間內所要求的作業。 伺服器可能已完成要求的作業。 會發生此網路或其他基礎結構的延遲。                                                                                                                                                                                                                                                                   | 檢查系統狀態的一致性，然後再試一次必要。 請參閱[逾時例外狀況](#timeoutexception)。                                                                                                                                                                                                                                                                                                                                                           | 重試可能有幫助在某些情況下。將重試邏輯新增至 [程式碼。                                                                      |
+| [InvalidOperationException](https://msdn.microsoft.com/library/system.invalidoperationexception.aspx)                                                                                                                                                                                         | 要求的使用者作業不允許在伺服器或服務。 請參閱例外狀況訊息，如需詳細資訊。 例如，[完成](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.brokeredmessage.complete.aspx)會產生此例外狀況，如果**ReceiveAndDelete**模式中收到郵件。                                                                                                                                                                                                                                                                                                     | 核取的程式碼，文件。 請確定是有效的操作。                                                                                                                                                                                                                                                                                                                                         | 重試會幫助。                                                                                                          |
+| [OperationCanceledException](https://msdn.microsoft.com/library/system.operationcanceledexception.aspx)                                                                                                                                                                                       | 嘗試叫用已經關閉，中止或處置的物件上作業。 在某些情況中已經處置環境交易。                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 檢查程式碼，並確定不會呼叫處置的物件上的作業。                                                                                                                                                                                                                                                                                                                                          | 重試會幫助。                                                                                                          |
+| [UnauthorizedAccessException](https://msdn.microsoft.com/library/system.unauthorizedaccessexception.aspx)                                                                                                                                                                                     | [TokenProvider](https://msdn.microsoft.com/library/azure/microsoft.servicebus.tokenprovider.aspx)物件無法取得權杖、 權杖無效，或權杖不含所需執行的作業的宣告。                                                                                                                                                                                                                                                                                                                                                                                                  | 請確定權杖提供者會建立包含正確的值。 核取存取控制服務的設定。                                                                                                                                                                                                                                                                                                   | 重試可能有幫助在某些情況下。將重試邏輯新增至 [程式碼。                                                                      |
+| [ArgumentException](https://msdn.microsoft.com/library/system.argumentexception.aspx)<br /> [ArgumentNullException](https://msdn.microsoft.com/library/system.argumentnullexception.aspx)<br />[ArgumentOutOfRangeException](https://msdn.microsoft.com/library/system.argumentoutofrangeexception.aspx) | 方法所提供的一或多個引數無效。<br /> 提供給[NamespaceManager](https://msdn.microsoft.com/library/azure/microsoft.servicebus.namespacemanager.aspx) ] 或 [[建立](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.messagingfactory.create.aspx)URI 包含路徑一致。<br /> 提供給[NamespaceManager](https://msdn.microsoft.com/library/azure/microsoft.servicebus.namespacemanager.aspx) ] 或 [[建立](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.messagingfactory.create.aspx)URI 配置不正確。 <br />屬性值大於 32 KB。 | 檢查呼叫的程式碼，並確認是正確的引數。                                                                                                                                                                                                                                                                                                                                                           | 重試會幫助。                                                                                                          |
+| [ServerBusyException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.serverbusyexception.aspx)                                                                                                                                                                       | 服務不能在此時間處理要求。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | 用戶端可以等待一段時間，然後再試。                                                                                                                                                                                                                                                                                                                                                           | 用戶端可能會在特定時間間隔之後再試一次。 如果重試造成不同的例外狀況，請核取重試行為的例外狀況。 |
+| [QuotaExceededException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.quotaexceededexception.aspx)                                                                                                                                                                 | 訊息的實體達到其允許的大小上限。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | 建立實體空間實體或其子佇列接收訊息。 請參閱[QuotaExceededException](#quotaexceededexception)。                                                                                                                                                                                                                                                                                                                                      | 如果郵件已同時，也許可以協助重試]。                                                               |
+| [MessageSizeExceededException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.messagesizeexceededexception.aspx)                                                                                                                                                     | 訊息內容超過 256 K。 請注意，256 k 限制郵件大小總計，包括系統內容]，[任何.NET 開銷。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | 縮小訊息內容，然後再試。                                                                                                                                                                                                                                                                                                                                                         | 重試會幫助。                                                                                                          |
+
+## <a name="quotaexceededexception"></a>QuotaExceededException
+
+[QuotaExceededException](https://msdn.microsoft.com/library/azure/microsoft.servicebus.messaging.quotaexceededexception.aspx)表示已超過特定的實體的配額。
+
+轉送，此例外狀況換行[System.ServiceModel.QuotaExceededException](https://msdn.microsoft.com/library/system.servicemodel.quotaexceededexception.aspx)，指出超過了這個端點接聽的最大數目。 這被表示**MaximumListenersPerEndpoint**值的例外狀況訊息。
+
+## <a name="timeoutexception"></a>「 逾時 
+
+[「 逾時](https://msdn.microsoft.com/library/system.timeoutexception.aspx)指出使用者啟動的作業花費超過作業逾時。 
+
+您應該檢查[ServicePointManager.DefaultConnectionLimit](https://msdn.microsoft.com/library/system.net.servicepointmanager.defaultconnectionlimit)屬性，為正中也原因[「 逾時](https://msdn.microsoft.com/library/system.timeoutexception.aspx)的限制可能的值。
+
+轉送，您可能會在第一次開啟轉接寄件者連線時收到逾時例外狀況。 有兩個常見的原因，這個例外狀況︰
+
+1. 可能太小[OpenTimeout](https://msdn.microsoft.com/library/wcf.opentimeout.aspx)值 （甚至的第二部分）。
+2. 內部部署轉送 listener(s) 可能無法回應 （或可能會遇到的接聽禁止接受新的用戶端連線的防火牆規則問題），及[OpenTimeout](https://msdn.microsoft.com/library/wcf.opentimeout.aspx)的值小於關於 20 秒。
+
+例如︰
+
+```
+'System.TimeoutException’: The operation did not complete within the allotted timeout of 00:00:10. The time allotted to this operation may have been a portion of a longer timeout.
+```
+
+### <a name="common-causes"></a>常見的原因
+
+有兩個這項錯誤的常見原因︰ 設定不正確或暫時性服務錯誤。
+
+1. **設定不正確**
+   作業逾時可能太小而無法運作的條件。 在用戶端 SDK 作業逾時的預設值為 60 秒。 檢查您的程式碼是否有值設定為 [太小的項目。 請注意網路的 CPU 使用率條件，可能會影響花費的時間，完成的特定作業，作業逾時不為非常小的值。
+
+2. **暫時服務錯誤**
+   有時轉送可能會遇到延遲處理要求。例如，期間高流量。 在這種情況下，您可以重試操作的延遲之後，直到作業是成功。 如果多個失敗之後還是無法相同的作業，請造訪[Azure 服務狀態網站](https://azure.microsoft.com/status/)，以查看是否有任何已知的服務中斷。
+
+## <a name="next-steps"></a>後續步驟︰
+
+- [轉送常見問題集](relay-faq.md)
+- [建立命名空間](relay-create-namespace-portal.md)
+- [開始使用.NET](relay-hybrid-connections-dotnet-get-started.md)
+- [快速入門節點](relay-hybrid-connections-node-get-started.md)

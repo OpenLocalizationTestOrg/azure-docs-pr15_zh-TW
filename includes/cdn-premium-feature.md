@@ -1,0 +1,1 @@
+> [AZURE.IMPORTANT] 這是**從 Verizon Azure CDN 進階版**的功能，而且不會使用**標準 Azure CDN**產品。  Cdn 到底功能的比較，請參閱[Azure CDN 概觀](cdn-overview.md#azure-cdn-features)。 
